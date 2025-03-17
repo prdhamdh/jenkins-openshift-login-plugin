@@ -1,11 +1,13 @@
 # This Dockerfile is intended for use by openshift/ci-operator config files defined
 # in openshift/release for v4.x prow based PR CI jobs
 
-FROM registry.ci.openshift.org/ocp/4.10:jenkins-agent-maven AS builder
+FROM registry.access.redhat.com/ubi9/openjdk-21:1.20 AS builder
 WORKDIR /java/src/github.com/openshift/jenkins-openshift-login-plugin
 COPY . .
 USER 0
-RUN export PATH=/opt/rh/rh-maven35/root/usr/bin:$PATH && mvn clean package
+
+RUN mvn --version
+RUN mvn clean package
 
 FROM registry.redhat.io/ocp-tools-4/jenkins-rhel8:v4.14.0
 RUN rm /opt/openshift/plugins/openshift-login.jpi
